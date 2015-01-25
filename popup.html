@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="tinycolorpicker.css">	
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<script src="js/jquery-ui.min.js"></script>
+	<script src="js/jquery.tinycolorpicker.min.js" type="text/javascript"></script>
+	<script src="js/popup.js" type="text/javascript"></script>
+</head>   
+<body>                 
+
+		<!----------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+												<!------------------------------------------------------------------------>
+												<!-----			Baby track Main Page HTML Implementation			------>
+												<!------------------------------------------------------------------------>
+		
+		<main id="bt_main_table">
+
+			<header id="bt_header">
+
+				<div>
+					<div id = "bt_title_main">BABY TRACKER</div>
+
+					<div id="bt_search_engine_area">
+						<span title="Search"></span>
+						<div id="bt_search_engine">
+							<input type="text" name="search_field" placeholder="Search" spellcheck="false"/>
+						</div>
+						<span title="Reset results"></span>
+					</div>
+
+					<div class="clear"></div>
+				</div>
+
+				<div id="bt_person_profile">
+
+				</div>
+
+			</header>
+
+			<div id="bt_body">
+				<div id="bt_container">
+
+					<section id="create_person_block">
+						<section>
+							<h1>Let's add a new person to track!</h1>
+
+							<div>
+								<label for="person_nickname">Nickname</label>
+									<input type="text" id="person_nickname" name="person_nickname" placeholder="Alexander" spellcheck="false" /><br />
+								<label for="person_birthday">Birthday</label>
+									<input type="text" id="person_birthday" name="person_birthday" placeholder="January 17, 2015" spellcheck="false" />
+							</div>
+
+							<hr/>
+
+							<div>
+								<div></div> 
+								<div></div>
+	
+								<input type="radio" id="female_gender" name="person_gender" checked="checked"/>
+								<label for="female_gender" data-gender-name="female">Girl</label>
+
+								<input type="radio" id="male_gender" name="person_gender" />
+								<label for="male_gender" data-gender-name="male">Boy</label>
+							</div>
+
+							<hr/>
+
+							<div>
+								<div id="palette_field">
+							
+								</div>
+							</div>
+
+						</section>
+					</section>
+
+					<section id="welcome_guide_block">
+						<section>
+							<h1>Welcome to Baby Tracker!</h1>
+							<p>
+								This tool will help you track the daily activities of your baby!, such as poop, feeding, sleep cycles, etc. Welcome to baby tracker! To get started press the green button<img src="images/addevent_icon.png" /> on the button right to add a new entry
+							</p>
+							<img src="images/addevent_pointer_icon.png" />
+						</section>
+					</section>
+				</div>
+				<span id="add_event_button"></span>
+			</div>
+		</main>
+
+</body>
+
+</html>

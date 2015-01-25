@@ -1,0 +1,33 @@
+{
+	"name": "Baby Track 1.0",
+ 
+	"description": "Baby Track 1.0",
+ 
+	"version": "1.0",
+	
+	"background": {
+		"scripts": ["js/jquery-1.11.1.min.js","js/background.js"]
+	},
+	
+	"icons": { "128": "images/icon128.png" },
+	
+	"permissions": [
+		"activeTab",
+		"tabs",
+		"<all_urls>",
+		"notifications"
+	],
+	
+	"browser_action": {
+		"default_title": "Track the baby now =)",
+		"default_icon": "images/icon2-20.png",
+		"default_popup": "popup.html"
+	},
+	
+	
+	//"web_accessible_resources":[
+	//	
+	//],
+	
+	"manifest_version": 2
+}

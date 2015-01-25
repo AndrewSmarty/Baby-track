@@ -1,0 +1,312 @@
+	body{
+		background-color: #00C8F8;
+		width: 526px;
+		position: relative;
+	    -moz-user-select: none;
+		-webkit-user-select: none;
+		-ms-user-select:none;
+		user-select:none;
+	}
+
+	main{
+		position:absolute;
+		left:-8px;
+		top:-8px;
+		width: 540px;
+	}
+
+	hr { 
+	    display: block;
+	    margin-top: 0.5em;
+	    margin-bottom: 0.5em;
+	    margin-left: auto;
+	    margin-right: auto;
+	    border-style: inset;
+	    border-width: 1px;
+	}
+
+	#bt_header{
+		background-color: #00C8F8;
+		height: 45px;
+		width: 100%;
+		position:relative;
+		border: thin solid #00C8F8;
+	}
+
+	#bt_body{
+		background-color: #EBEBEB;
+		position:relative;
+		height:400px;
+		border: 2px solid #61939F;
+		width: 99.7%;
+		z-index: 5;
+	}
+
+	#bt_header > div:first-of-type{
+		border: 1px solid #00C8F8;
+		float:left;
+		width: 90%;
+		height:45px;
+		left:0;
+		top:0;
+	}
+
+	#bt_person_profile{
+		box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.7);
+		background: url("images/profile avatars/Ilia.png") no-repeat 0 0;
+		background-size: 49px 46px;
+		border: 1px solid #61939F;
+		border-radius: 4px;
+		cursor: pointer;
+		float:left;
+		width: 9%;
+		height:46px;
+		z-index: 4;
+		margin-top: 1px;
+		right:0;
+	}
+
+
+	#bt_title_main{
+		position: absolute;
+		margin: 12px;
+		color: #FFFFFF;
+		font-weight: bold;
+		font-size: 16px;
+	}
+
+	#bt_search_engine >  input[name="search_field"]{
+		position: relative;
+		font-style: italic;
+		font-size: 17px;
+		left:27px;
+		width: 82%;
+		border:0;
+	}
+
+	#bt_search_engine >  input[name="search_field"]:focus{
+		outline: 0;
+	}
+
+	#bt_search_engine_area{
+		position: relative;
+		margin: 13px;
+		left: 130px;
+		width: 65%;
+		background-color: #FFFFFF;
+		border-radius: 4px;
+	}
+
+	#bt_search_engine_area > span:first-child{
+		position: absolute;			
+		width: 17px;
+		height: 17px;
+		left: 4px;			
+		top:50%;								/* center align */
+		transform: translate(0, -50%);			/* vertically   */
+		cursor: pointer;
+		background: url("images/search_icon.png") no-repeat 0 0;
+	}
+
+	#bt_search_engine_area > span:last-child{
+		position: absolute;	
+		width: 17px;
+		height: 17px;
+		right: 4px;			
+		top:50%;								/* center align */
+		transform: translate(0, -50%);			/* vertically   */
+		cursor: pointer;
+		background: url("images/search_close_icon.png") no-repeat 0 0;
+	}
+
+	#add_event_button{
+		position: absolute;
+		bottom: 5px;							/* positioning element to the right */
+		right: 5px;								/* bottom corner of the parent element */
+		cursor: pointer;
+		width: 38px;
+		height: 38px;
+		background: url("images/addevent_icon.png") no-repeat 0 0 ;
+	}
+
+
+	.clear{
+		clear:both;
+	}
+
+	#bt_container{
+		/*border: 1px solid #61939F;
+		background-color: white;*/
+		width:80%;
+		height: 90%;
+		position:absolute;
+		top:50%;								/* center align */
+		transform: translate(0, -50%);			/* vertically   */
+		margin: auto 9%;
+	}
+
+	#welcome_guide_block{
+		position: relative;
+		border: thin solid #969696;
+		display: none;
+		cursor: default;
+		background: #FFF;
+		border-radius: 5px;
+		padding:10px 5px;
+		width: 100%;
+		left:-5px;
+		top:8%;
+	}
+	
+
+	#welcome_guide_block:before, #welcome_guide_block:after {
+		z-index: -1; 
+		position: absolute; 
+		content: "";
+		bottom: 15px;
+		left: 10px;
+		width: 50%; 
+		top: 80%;
+		max-width:300px;
+		background: rgba(0, 0, 0, 0.7); 
+		box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+		transform: rotate(-4deg);
+	}
+
+	#welcome_guide_block:after {
+		transform: rotate(4deg);
+		right: 10px;
+		left: auto;
+	}
+
+	#welcome_guide_block > section > h1 {
+		font-family: Optima, Segoe, Segoe UI, Candara, Calibri, Arial, sans-serif; 
+		color: #00C8F8;
+		text-align: center;
+		font-size: 20px;
+	}
+
+	#welcome_guide_block > section > p{
+		font-family: 'Lucida Console', 'Lucida Sans Typewriter', monaco, 'Bitstream Vera Sans Mono', monospace;
+		text-align: justify;
+		width: 70%;
+		line-height: 170%;
+		font-size: 15px;
+		margin-right: auto;
+		margin-left: auto;
+	}
+
+	#welcome_guide_block > section > p > img {
+		top: 4px;
+		left: 10px;
+		width: 20px;
+		height: 20px;
+		position: relative;	
+		cursor: pointer;
+	}
+
+	#welcome_guide_block > section > p + img{
+		top: 230px;
+		left: 225px;
+		width: 173px;
+		height: 108px;
+		z-index: 5;
+		opacity: 0;
+		position: absolute;
+
+	}
+
+	#create_person_block{
+		position: relative;
+		border: thin solid #969696;
+		display: none;
+		cursor: default;
+		background: #FFF;
+		border-radius: 5px;
+		padding-left: 20px;
+		width: 95%;
+	}
+
+	#create_person_block > section > h1{
+		font-family: Optima, Segoe, Segoe UI, Candara, Calibri, Arial, sans-serif; 
+		color: #00C8F8;
+		font-size: 20px;
+		text-align: center;
+	}
+
+	#create_person_block > section > div:first-of-type{
+		position: relative;
+		left: 10px;
+	}
+
+	#create_person_block > section > div:first-of-type label[for="person_nickname"],
+	#create_person_block > section > div:first-of-type label[for="person_birthday"]{
+		font-size: 17px;
+		margin: 0px 10px 10px 0px;
+		color: #000000;
+		text-shadow: 0px 1px 3px #D3D3D3;
+	}
+
+	#create_person_block > section > div:first-of-type label[for="person_nickname"] + input,
+	#create_person_block > section > div:first-of-type label[for="person_birthday"] + input{
+		margin: 0px 10px 10px 0px;
+		padding-left: 5px;
+	}
+
+	#create_person_block > section > div:first-of-type label[for="person_birthday"] + input{
+		margin-left:14px;
+	}
+
+	#create_person_block > section > div:nth-of-type(2){
+		position: relative;
+		width: 40%;
+		left: 27%;
+		margin-bottom: 1em;
+		margin-top: 20%;
+	}
+
+
+	#create_person_block > section > div:nth-of-type(2) div:first-child,
+	#create_person_block > section > div:nth-of-type(2) div:nth-child(2){
+		background: url("images/gender_icon.png") no-repeat 0 0;
+		position: absolute;
+		width: 65px;
+		height: 65px;
+		top: -70px;
+	}
+
+	#create_person_block > section > div:nth-of-type(2) div:first-child{
+		background-position: 0 0;
+	}
+
+	#create_person_block > section > div:nth-of-type(2) div:nth-child(2) {
+		background-position: -65px 0;
+		margin-left: 100px;
+	}
+
+	#create_person_block > section > div:nth-of-type(2)  input#male_gender{
+		margin-left: 55px;
+	}
+
+	#create_person_block > section > div:nth-of-type(2)  input#female_gender{
+		margin-left: 12px;
+	}
+
+	#create_person_block > section > div:nth-of-type(2)  input + label[for="female_gender"] ,
+	#create_person_block > section > div:nth-of-type(2)  input + label[for="male_gender"] {
+		position: relative;
+		cursor: pointer;
+		left: -3px;
+		top: -2px;
+		text-shadow: 0px 1px 3px #D3D3D3;
+		font-size: 16px;
+	}
+
+	#create_person_block > section hr{
+		width: 90%;
+		position: relative;
+		left: -10px;
+	}
+
+}
+
