@@ -2,10 +2,8 @@
 <html>
 <head>
 	<link rel="stylesheet" type="text/css" href="style.css">
-	<link rel="stylesheet" type="text/css" href="tinycolorpicker.css">	
 	<script src="js/jquery-1.11.1.min.js"></script>
 	<script src="js/jquery-ui.min.js"></script>
-	<script src="js/jquery.tinycolorpicker.min.js" type="text/javascript"></script>
 	<script src="js/popup.js" type="text/javascript"></script>
 </head>   
 <body>                 
@@ -57,14 +55,15 @@
 							<hr/>
 
 							<div>
-								<div></div> 
-								<div></div>
-	
-								<input type="radio" id="female_gender" name="person_gender" checked="checked"/>
+								<div class="avatar unselected" id="avatar1"></div> 
+								<div class="avatar unselected" id="avatar2"></div>
+								<div id="avatar_select_desc">Select Avatar:</div>
+
+								<!--<input type="radio" id="female_gender" name="person_gender" checked="checked"/>
 								<label for="female_gender" data-gender-name="female">Girl</label>
 
 								<input type="radio" id="male_gender" name="person_gender" />
-								<label for="male_gender" data-gender-name="male">Boy</label>
+								<label for="male_gender" data-gender-name="male">Boy</label>-->
 							</div>
 
 							<hr/>
@@ -74,11 +73,35 @@
 							
 								</div>
 							</div>
-
 						</section>
 					</section>
 
-					<section id="welcome_guide_block">
+					<section id="choose_person">
+						<section>
+							<h1>Choose a person</h1>
+
+							<div class=".avatar">
+									<!--
+										Here is gonna be a block of persons... 
+										an optimized algorithm of structuring them is required... 
+										this part is in process!
+									-->
+
+							</div>
+						</section>
+					</section>
+
+					<section id="wizard_new_activity">
+						<section>
+							<h1></h1>
+
+			
+						</section>
+					</section>
+
+
+
+					<section class="pseudo-off" id="welcome_guide_block">
 						<section>
 							<h1>Welcome to Baby Tracker!</h1>
 							<p>
@@ -87,6 +110,10 @@
 							<img src="images/addevent_pointer_icon.png" />
 						</section>
 					</section>
+				</div>
+				<div>
+						<a class="button back" href="#" >Back</a>
+						<a class="button next" href="#" >Next</a>
 				</div>
 				<span id="add_event_button"></span>
 			</div>
