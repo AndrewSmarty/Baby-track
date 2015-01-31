@@ -25,6 +25,21 @@
 	    border-width: 1px;
 	}
 
+	div[data-avatar-type = "type1"],
+	div[data-avatar-type = "type2"]{
+		background: url("images/gender_icon.png") no-repeat 0 0;
+		width: 65px;
+		height: 65px;
+	}
+
+	div[data-avatar-type = "type1"]{
+		background-position: 0 0;
+	}
+
+	div[data-avatar-type = "type2"]{
+		background-position: -65px 0;
+	}
+
 
 	/*******	Styling NEXT and BACK buttons	********/
 
@@ -169,7 +184,7 @@
 	#bt_person_profile{
 		box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.7);
 		background: url("images/profile avatars/Ilia.png") no-repeat 0 0;
-		background-size: 49px 46px;
+		background-size: cover;
 		border: 1px solid #61939F;
 		border-radius: 4px;
 		cursor: pointer;
@@ -241,7 +256,7 @@
 		cursor: pointer;
 		width: 38px;
 		height: 38px;
-		background: url("images/addevent_icon.png") no-repeat 0 0 ;
+		background: url("images/add_action_buttons.png") no-repeat 0 0 ;
 	}
 
 
@@ -380,11 +395,8 @@
 	}
 
 	#create_person_block > section > div:nth-of-type(2) div.avatar{
-		background: url("images/gender_icon.png") no-repeat 0 0;
 		cursor: pointer;
 		position: absolute;
-		width: 65px;
-		height: 65px;
 		top: -70px;
 	}
 
@@ -400,13 +412,11 @@
 		opacity: 0.6;
 	}
 
-	#create_person_block > section > div:nth-of-type(2) div#avatar1{
-		background-position: 0 0;
+	#create_person_block > section > div:nth-of-type(2) div[data-avatar-type="type1"]{
 		margin-left: 20px;
 	}
 
-	#create_person_block > section > div:nth-of-type(2) div#avatar2 {
-		background-position: -65px 0;
+	#create_person_block > section > div:nth-of-type(2) div[data-avatar-type="type2"] {
 		margin-left: 115px;
 	}
 
@@ -493,9 +503,66 @@
 		font-size: 17px;
 		position: absolute;
 		top: -3em;
-		left:-6em;
+		left: -6em;
 		color: #000000;
 		text-shadow: 0px 1px 3px #D3D3D3;
 	}
-}
 
+	#choose_person > section{
+		position: absolute;
+		height: 90%;
+		width: 90%;
+	}
+
+	#choose_person > section > div:first-of-type {
+		position: absolute;
+		height: 75%;
+	}
+
+	#choose_person > section > div:first-of-type > div.add_person_button{
+		float:left;
+	}
+
+	#choose_person > section > div:first-of-type > div.add_person_button  div{
+		cursor: pointer;
+		position: relative;
+		top:15px;
+		height: 100px;
+	}
+
+	#choose_person > section > div:first-of-type > div.add_person_button  div div{
+		cursor: pointer;
+		background: url("images/add_action_buttons.png") no-repeat -39px 0px;
+		width: 41px;
+		height: 41px;
+	}
+
+	#choose_person > section > div:first-of-type > section[data-type="avatar"]{
+		margin: 10px;
+		cursor: pointer;
+		float:left;
+	}
+
+	#choose_person > section > div:first-of-type > section[data-type="avatar"]   div{
+		position: relative;
+	}
+
+	#choose_person > section > div:first-of-type > section[data-type="avatar"]   div   label {
+		cursor: pointer;
+		display: flex;
+		display: -ms-flex;
+		display: -moz-flex;
+		display: -webkit-flex;
+	}
+
+	#choose_person > section > div:first-of-type > section[data-type="avatar"]   div   label *:not(input[type=radio]){
+		cursor: pointer;
+		margin-left: 0;
+		padding-left: 0;
+	}
+
+	#choose_person > section > div:first-of-type > section[data-type="avatar"]   div   label input[type=radio]{
+		cursor: pointer;
+		margin-right: auto;
+		margin-left: auto;
+	}

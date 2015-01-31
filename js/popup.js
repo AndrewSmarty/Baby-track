@@ -1,6 +1,30 @@
 (function($, undefined){
 
 	var bg = chrome.extension.getBackgroundPage();
+	var MAX_PAGE_AMOUNT_COUNT = 8;
+
+	var needToCorrectInputs = false;
+
+	function SnugBabyPerson(nickname, birthday, avatarType, color){
+		this.nickname = nickname;
+		this.birthday = birthday;
+		this.avatarType = avatarType;
+		this.color = color;
+	}
+
+	SnugBabyPerson.prototype.toString = function() {
+		return "{nickname: '" + this.nickname +
+			 "', birthday: '" + this.birthday +
+			 "', avatarType: '" + this.avatarType +
+			 "', color: '" + this.color.toString() + "'}";
+	};
+
+
+	function IncorrectInputException(message){
+		this.message = message;
+		this.name = "Incorrect Input Exception";
+	}
+
 
 	function setInitialPage(page, custom_appear ){
 
@@ -73,6 +97,29 @@
 
 	}
 
+
+	function checkCorrectInputAndSubmit( object ){
+		switch( object.window ){
+			
+			case "CREATE_NEW_PERSON":	
+				var nickname = $("#create_person_block  input#person_nickname").val();
+				var birthday = $("#create_person_block  input#person_birthday").val();
+				var $avatar =  $("#create_person_block  .avatar.selected");
+				var color = $("#create_person_block  div#palette_field");     			//in processing... not supported yet
+
+				if( nickname === "")
+					throw new IncorrectInputException( "Nickname is not specified!" );
+				else if( birthday === "")
+					throw new IncorrectInputException( "Birthday is not specified!" );
+				else if( $.isEmptyObject( $avatar[0] ))
+					throw new IncorrectInputException( "Avatar is not specified!" );
+
+			break;
+
+		}
+	}
+
+
 	//The function is used to get rid of major (not popup and dropdown!!!) 
 	//windows as only one major (not popup and dropdown!!!) window may be 
 	//displayed on the app screen at the same time
@@ -107,6 +154,12 @@
 						});
 					break;
 
+					case "slideDown":
+						$(this).slideDown(custom_appear.speed, function(){
+							bg.windowsAnimationOver = true;
+						});
+					break;
+
 				}
 
 			}
@@ -123,16 +176,92 @@
 				
 				case bg.BabyTrackMode.CREATE_NEW_PERSON:
 
-					bg.mode = bg.BabyTrackMode.CHOOSE_EXISTED_PERSON;
-					bg.previousWindow = bg.BabyTrackWindows.CREATE_NEW_PERSON;
+					try{
+						checkCorrectInputAndSubmit({window: "CREATE_NEW_PERSON"});	
+					}
+					catch(e){
+						alert(e.name + ": " + e.message);
+						break;
+					}
 
-					clearWindows({effect: "drop", speed: 500, direction: "left"});
-					var timer = setInterval(function(){
-						if(bg.windowsAnimationOver){
-							$("#choose_person").show("drop", {direction: "right"}, 400);
-							clearInterval(timer);
+					//this part executes as long as the whole data is full
+					//and everything is specified
+						  
+ 
+						var nickname = $("#create_person_block  input#person_nickname").val();
+						var birthday = $("#create_person_block  input#person_birthday").val();
+						var avatarType =  $("#create_person_block  .avatar.selected").attr("data-avatar-type");
+						var color = $("#create_person_block  div#palette_field")[0];     			//in processing... not supported yet
+
+						var baby = new SnugBabyPerson(nickname, birthday, avatarType, color);
+
+						var $prevSibling = $("#choose_person > section > div > .add_person_button").prev();
+						if( $.isEmptyObject($prevSibling[0]) ||
+							!needToCorrectInputs ){
+
+							$prevSibling.find("div > div[data-avatar-type]").toggleClass("selected unselected");
+							$prevSibling.find("label > input[type=radio]").prop("checked", false);
+
+							var newPersonAvatar = 	"<section data-type='avatar'>"+
+														"<div>"+
+															"<div class = 'avatar selected' data-avatar-type="+ baby.avatarType +">"+
+															
+															"</div>"+
+															
+															"<label>"+
+																"<input type='radio' name='avatar_radio'/>"+
+																baby.nickname +
+															"</label>"+
+														"</div>"+
+													"</section>";
+							
+
+							var pageAvatarCount = $("#choose_person > section > div > section").length;
+
+							if( pageAvatarCount == MAX_PAGE_AMOUNT_COUNT)
+								$("#choose_person > section > div").css({"overflow-y": "scroll"});
+
+							$("#choose_person > section > div > .add_person_button").before( newPersonAvatar );
+
+							$("#choose_person > section > div > section[data-type='avatar']")
+								.last()
+								.find("label > input[type=radio]")
+								.prop("checked", true);
+
+						}else{
+							needToCorrectInputs = false;
+							$prevSibling.find("div[data-avatar-type]").attr("data-avatar-type", baby.avatarType);
+							$prevSibling.find("label").html("<input type='radio' name='avatar_radio'/>" + baby.nickname);
+							$prevSibling.find("label input[type='radio']").prop("checked", true);
 						}
-					}, 10);
+
+						
+						$("section[data-type='avatar']").each(function(index){
+							$(this).dblclick(function(){
+								$(this).hide(500,function(){
+									if( !$.isEmptyObject( $(this).prev()[0] )){
+										if( $(this).find("label > input[type=radio]").is(":checked")){
+											$(this).prev().find("div > div[data-avatar-type]").toggleClass("selected unselected");
+											$(this).prev().find("label > input[type=radio]").prop("checked", true);
+										}
+									}
+									$(this).remove();
+								});
+							});
+						});
+
+						clearWindows({effect: "drop", speed: 500, direction: "left"});
+
+						var timer = setInterval(function(){
+							if(bg.windowsAnimationOver){
+								$("#choose_person").show("drop", {direction: "right"}, 400);
+								clearInterval(timer);
+							}
+						}, 10);
+
+						bg.mode = bg.BabyTrackMode.CHOOSE_EXISTED_PERSON;
+						bg.previousWindow = bg.BabyTrackWindows.CREATE_NEW_PERSON;
+					//////
 
 				break;
 
@@ -141,8 +270,7 @@
 					bg.mode = bg.BabyTrackMode.ADD_EVENT_WIZARD_NEW_ACTIVITY;
 					bg.previousWindow = bg.BabyTrackWindows.CHOOSE_EXISTED_PERSON;
 
-					var nickname = $("#create_person_block input#person_nickname").val();
-					console.log(nickname);
+					var nickname = $("#create_person_block  input#person_nickname").val();
 					///Some later i add an empty and correct input check on!
 
 					//setting the default value for the element if it's undefined
@@ -157,6 +285,8 @@
 							clearInterval(timer);
 						}
 					}, 10);
+
+
 
 				break;
 
@@ -202,6 +332,7 @@
 				break;
 				
 				case bg.BabyTrackWindows.CREATE_NEW_PERSON:
+					needToCorrectInputs = true;
 
 					bg.previousWindow = bg.BabyTrackWindows.WELCOME_POST;
 					bg.mode = bg.BabyTrackMode.CREATE_NEW_PERSON;
@@ -243,7 +374,7 @@
 
 	/******************************************************************/
 
-	function unselectOthers( ){
+	function unselectOthers(){
 
 		$("#create_person_block").find(".avatar").each(function(index){
 				if($(this).hasClass("selected"))
@@ -260,7 +391,7 @@
 
 		//handaling an avatar selection
 		//by means of increasing/descreasing an opacity value
-		$("#create_person_block").find(".avatar").each(function(index){
+		$(".avatar").each(function(index){
 
 			$(this).bind({
 
@@ -316,6 +447,37 @@
 						//--
 			}
 		});
+
+		$(".add_person_button").click(function(){
+
+					addPersonButtonPressed = true;
+
+					bg.previousWindow = bg.BabyTrackWindows.CHOOSE_EXISTED_PERSON;
+					bg.mode = bg.BabyTrackMode.CREATE_NEW_PERSON;
+
+					clearWindows({effect: "fadeOut", speed: 500});
+					var timer = setInterval(function(){
+						if(bg.windowsAnimationOver){
+							$("#create_person_block").fadeIn(400);
+							clearInterval(timer);
+						}
+					}, 10);
+
+					//clear all the fields in Create New Person Window
+					$("#create_person_block  input#person_nickname").val("");
+					$("#create_person_block  input#person_birthday").val("");
+					$("#create_person_block  .avatar.selected").toggleClass("selected unselected");
+					var color = $("#create_person_block  div#palette_field")[0];     				//in processing... not supported yet
+
+		});
+
+		$("#choose_person  section[data-type='avatar'] label").each(function(index){
+			$(this).click(function(){
+				alert("Hello");
+			});
+		});
+
+
 
 	});
 
