@@ -214,7 +214,6 @@
 															"</label>"+
 														"</div>"+
 													"</section>";
-							
 
 							var pageAvatarCount = $("#choose_person > section > div > section").length;
 
@@ -225,17 +224,25 @@
 
 							$("#choose_person > section > div > section[data-type='avatar']")
 								.last()
+								.click(function(){
+									unselectOthers({window: "CHOOSE_EXISTED_PERSON"}); 
+									$(this).find("div.avatar").toggleClass("selected unselected");
+									$(this).find("input[type=radio]").prop("checked", true);
+								})
 								.find("label > input[type=radio]")
 								.prop("checked", true);
+
 
 						}else{
 							needToCorrectInputs = false;
 							$prevSibling.find("div[data-avatar-type]").attr("data-avatar-type", baby.avatarType);
 							$prevSibling.find("label").html("<input type='radio' name='avatar_radio'/>" + baby.nickname);
 							$prevSibling.find("label input[type='radio']").prop("checked", true);
+							
+							unselectOthers({window:"CHOOSE_EXISTED_PERSON"});
+							$prevSibling.find("div.avatar").toggleClass("selected unselected");
 						}
 
-						
 						$("section[data-type='avatar']").each(function(index){
 							$(this).dblclick(function(){
 								$(this).hide(500,function(){
@@ -374,12 +381,21 @@
 
 	/******************************************************************/
 
-	function unselectOthers(){
+	function unselectOthers(obj){
+		var selector = "";
+		switch(obj.window){
+			case "CREATE_NEW_PERSON":
+				selector = "#create_person_block";
+				break;
+			case "CHOOSE_EXISTED_PERSON":
+				selector = "#choose_person";
+				break;
+		}
 
-		$("#create_person_block").find(".avatar").each(function(index){
+		$(selector).find(".avatar").each(function(index){
 				if($(this).hasClass("selected"))
 					$(this).toggleClass("selected unselected");
-		});
+		}); 
 	}
 
 
@@ -388,10 +404,9 @@
 		setInitialPage(bg.initialPage);
 		setNextBackButtonsLogic();
 
-
 		//handaling an avatar selection
 		//by means of increasing/descreasing an opacity value
-		$(".avatar").each(function(index){
+		$("#create_person_block").find(".avatar").each(function(index){
 
 			$(this).bind({
 
@@ -411,9 +426,10 @@
 				},
 
 				click: function(){
-					unselectOthers(); 
+					unselectOthers({window: "CREATE_NEW_PERSON"}); 
 					$(this).toggleClass("selected unselected");
 				}
+
 			});
 
 		});
@@ -470,14 +486,6 @@
 					var color = $("#create_person_block  div#palette_field")[0];     				//in processing... not supported yet
 
 		});
-
-		$("#choose_person  section[data-type='avatar'] label").each(function(index){
-			$(this).click(function(){
-				alert("Hello");
-			});
-		});
-
-
 
 	});
 

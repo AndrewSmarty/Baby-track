@@ -400,16 +400,16 @@
 		top: -70px;
 	}
 
-	#create_person_block > section > div:nth-of-type(2) div.avatar.unselected:hover{
-		opacity: 1;
-	}
-
 	.avatar.selected{
 		opacity: 1;
 	}
 
 	.avatar.unselected{
 		opacity: 0.6;
+	}
+
+	.avatar.unselected:hover{
+		opacity: 1;
 	}
 
 	#create_person_block > section > div:nth-of-type(2) div[data-avatar-type="type1"]{
@@ -563,6 +563,4 @@
 
 	#choose_person > section > div:first-of-type > section[data-type="avatar"]   div   label input[type=radio]{
 		cursor: pointer;
-		margin-right: auto;
-		margin-left: auto;
 	}
