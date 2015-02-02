@@ -55,8 +55,8 @@
 							<hr/>
 
 							<div>
-								<div class="avatar unselected" id="avatar1"></div> 
-								<div class="avatar unselected" id="avatar2"></div>
+								<div class="avatar unselected" data-avatar-type="type1"></div> 
+								<div class="avatar unselected" data-avatar-type="type2"></div>
 								<div id="avatar_select_desc">Select Avatar:</div>
 
 								<!--<input type="radio" id="female_gender" name="person_gender" checked="checked"/>
@@ -75,18 +75,37 @@
 							</div>
 						</section>
 					</section>
-
+					
 					<section id="choose_person">
 						<section>
 							<h1>Choose a person</h1>
-
-							<div class=".avatar">
+							<div>	
 									<!--
 										Here is gonna be a block of persons... 
-										an optimized algorithm of structuring them is required... 
-										this part is in process!
+										an optimized algorithm of constructuring them is required... 
 									-->
 
+									<!-- Example
+										<section data-type="avatar">
+											<div>
+												<div class = "avatar selected" data-avatar-type="type1">
+													
+												</div>
+												
+												<label>
+													<input type="radio" name="avatar_radio" checked="checked" />Andrew
+												</label>
+											</div>
+										</section>
+									-->
+
+								<div class="add_person_button">
+									<div>
+										<div></div>
+									</div>
+								</div>
+
+								<span class="clear"></span>
 							</div>
 						</section>
 					</section>
@@ -94,12 +113,99 @@
 					<section id="wizard_new_activity">
 						<section>
 							<h1></h1>
+							<div>	
+									<!--
+										Here is gonna be a block of persons... 
+										an optimized algorithm of constructuring them is required... 
+									-->
 
+									<section data-type="activity">
+										<div>
+											<div class = "activity selected" data-activity-type="food">
+												
+											</div>
+											
+											<label>
+												<input type="radio" name="activity_radio" />Food
+											</label>
+										</div>
+									</section>
+
+									<section data-type="activity">
+										<div>
+											<div class = "activity unselected" data-activity-type="diaper">
+												
+											</div>
+											
+											<label>
+												<input type="radio" name="activity_radio" />Diaper
+											</label>
+										</div>
+									</section>
+
+									<section data-type="activity">
+										<div>
+											<div class = "activity unselected" data-activity-type="weight">
+												
+											</div>
+											
+											<label>
+												<input type="radio" name="activity_radio" />Weight
+											</label>
+										</div>
+									</section>
+
+								<div class="add_person_button">
+									<div>
+										<div></div>
+									</div>
+								</div>
+
+								<span class="clear"></span>
+							</div>
 			
 						</section>
 					</section>
 
+					<section id="diaper_content">
+						<section>
+							<h1></h1>
+							<hr />
+							<div>	
+									<!--
+										Here is gonna be a block of persons... 
+										an optimized algorithm of constructuring them is required... 
+									-->
 
+									<section data-type="subactivity_diaper">
+										<div>
+											<div class = "subactivity_diaper selected" data-diaper-type="peed">
+												
+											</div>
+											
+											<label>
+												<input type="radio" name="subactivity_diaper_radio" />Pee
+											</label>
+										</div>
+									</section>
+
+									<section data-type="subactivity_diaper">
+										<div>
+											<div class = "subactivity_diaper unselected" data-diaper-type="pooped">
+												
+											</div>
+											
+											<label>
+												<input type="radio" name="subactivity_diaper_radio" />Poop
+											</label>
+										</div>
+									</section>
+
+								<span class="clear"></span>
+							</div>
+			
+						</section>
+					</section>
 
 					<section class="pseudo-off" id="welcome_guide_block">
 						<section>

@@ -25,6 +25,56 @@
 	    border-width: 1px;
 	}
 
+	div[data-avatar-type = "type1"],
+	div[data-avatar-type = "type2"]{
+		background: url("images/gender_icon.png") no-repeat 0 0;
+		width: 65px;
+		height: 65px;
+	}
+
+	div[data-avatar-type = "type1"]{
+		background-position: 0 0;
+	}
+
+	div[data-avatar-type = "type2"]{
+		background-position: -65px 0;
+	}
+
+
+	div[data-activity-type = "food"],
+	div[data-activity-type = "diaper"],
+	div[data-activity-type = "weight"]{
+		background: url("images/activities.png") no-repeat 0 0;
+		width: 65px;
+		height: 65px;
+	}
+
+	div[data-activity-type = "food"]{
+		background-position: 0 0;
+	}
+
+	div[data-activity-type = "diaper"]{
+		background-position: -65px 0;
+	}
+
+	div[data-activity-type = "weight"]{
+		background-position: -130px 0;
+	}
+
+	div[data-diaper-type = "pooped"],
+	div[data-diaper-type = "peed"]{
+		background: url("images/diapers.png") no-repeat 0 0;
+		width: 65px;
+		height: 65px;
+	}
+
+	div[data-diaper-type = "peed"]{
+		background-position: 0 0;
+	}
+
+	div[data-diaper-type = "pooped"]{
+		background-position: -65px 0;
+	}
 
 	/*******	Styling NEXT and BACK buttons	********/
 
@@ -169,7 +219,7 @@
 	#bt_person_profile{
 		box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.7);
 		background: url("images/profile avatars/Ilia.png") no-repeat 0 0;
-		background-size: 49px 46px;
+		background-size: cover;
 		border: 1px solid #61939F;
 		border-radius: 4px;
 		cursor: pointer;
@@ -241,7 +291,7 @@
 		cursor: pointer;
 		width: 38px;
 		height: 38px;
-		background: url("images/addevent_icon.png") no-repeat 0 0 ;
+		background: url("images/add_action_buttons.png") no-repeat 0 0 ;
 	}
 
 
@@ -380,33 +430,34 @@
 	}
 
 	#create_person_block > section > div:nth-of-type(2) div.avatar{
-		background: url("images/gender_icon.png") no-repeat 0 0;
 		cursor: pointer;
 		position: absolute;
-		width: 65px;
-		height: 65px;
 		top: -70px;
 	}
 
-	#create_person_block > section > div:nth-of-type(2) div.avatar.unselected:hover{
+	.avatar.selected, 
+	.activity.selected,
+	.subactivity_diaper.selected{
 		opacity: 1;
 	}
 
-	.avatar.selected{
-		opacity: 1;
-	}
-
-	.avatar.unselected{
+	.avatar.unselected,
+	.activity.unselected,
+	.subactivity_diaper.unselected{
 		opacity: 0.6;
 	}
 
-	#create_person_block > section > div:nth-of-type(2) div#avatar1{
-		background-position: 0 0;
+	.avatar.unselected:hover,
+	.activity.unselected:hover,
+	.subactivity_diaper.unselected:hover{
+		opacity: 1;
+	}
+
+	#create_person_block > section > div:nth-of-type(2) div[data-avatar-type="type1"]{
 		margin-left: 20px;
 	}
 
-	#create_person_block > section > div:nth-of-type(2) div#avatar2 {
-		background-position: -65px 0;
+	#create_person_block > section > div:nth-of-type(2) div[data-avatar-type="type2"] {
 		margin-left: 115px;
 	}
 
@@ -439,7 +490,9 @@
 	}
 
 
-	#choose_person{
+	#choose_person,
+	#wizard_new_activity,
+	#diaper_content{
 		position: relative;
 		border: thin solid #969696;
 		display: none;
@@ -451,26 +504,9 @@
 		height: 100%;
 	}
 
-	#choose_person > section > h1{
-		font-family: Optima, Segoe, Segoe UI, Candara, Calibri, Arial, sans-serif; 
-		color: #00C8F8;
-		font-size: 20px;
-		text-align: center;
-	}
-
-	#wizard_new_activity{
-		position: relative;
-		border: thin solid #969696;
-		display: none;
-		cursor: default;
-		background: #FFF;
-		border-radius: 5px;
-		padding-left: 20px;
-		width: 95%;
-		height: 100%;
-	}
-
-	#wizard_new_activity > section > h1{
+	#choose_person > section > h1,
+	#wizard_new_activity > section > h1,
+	#diaper_content > section > h1{
 		font-family: Optima, Segoe, Segoe UI, Candara, Calibri, Arial, sans-serif; 
 		color: #00C8F8;
 		font-size: 20px;
@@ -479,7 +515,7 @@
 
 	#bt_body >  div:last-of-type{
 		position: absolute;
-		display: none;
+		display: none; 
 		bottom: 20px;
 		left:35%;
 	}
@@ -493,9 +529,88 @@
 		font-size: 17px;
 		position: absolute;
 		top: -3em;
-		left:-6em;
+		left: -6em;
 		color: #000000;
 		text-shadow: 0px 1px 3px #D3D3D3;
 	}
-}
 
+	#choose_person > section,
+	#wizard_new_activity > section,
+	#diaper_content > section{
+		position: absolute;
+		height: 90%;
+		width: 90%;
+	}
+
+	#choose_person > section > div:first-of-type,
+	#wizard_new_activity > section > div:first-of-type{
+		position: absolute;
+		height: 75%;
+	}
+
+	#choose_person > section > div:first-of-type > div.add_person_button,
+	#wizard_new_activity > section > div:first-of-type > div.add_person_button{
+		float:left;
+	}
+
+	#choose_person > section > div:first-of-type > div.add_person_button  div,
+	#wizard_new_activity > section > div:first-of-type > div.add_person_button  div{
+		cursor: pointer;
+		position: relative;
+		top:15px;
+		height: 100px;
+	}
+
+	#choose_person > section > div:first-of-type > div.add_person_button  div div,
+	#wizard_new_activity > section > div:first-of-type > div.add_person_button  div div{
+		cursor: pointer;
+		background: url("images/add_action_buttons.png") no-repeat -39px 0px;
+		width: 41px;
+		height: 41px;
+	}
+
+	#choose_person > section > div:first-of-type > section[data-type="avatar"],
+	#wizard_new_activity > section > div:first-of-type > section[data-type="activity"],
+	#diaper_content > section > div:first-of-type > section[data-type="subactivity_diaper"]{
+		margin: 10px;
+		cursor: pointer;
+		float:left;
+	}
+
+	#choose_person > section > div:first-of-type > section[data-type="avatar"]   div,
+	#wizard_new_activity > section > div:first-of-type > section[data-type="activity"]   div,
+	#diaper_content > section > div:first-of-type > section[data-type="subactivity_diaper"]   div{
+		position: relative;
+	}
+
+	#choose_person > section > div:first-of-type > section[data-type="avatar"]   div   label,
+	#wizard_new_activity > section > div:first-of-type > section[data-type="activity"]   div   label,
+	#diaper_content > section > div:first-of-type > section[data-type="subactivity_diaper"]   div   label{
+		cursor: pointer;
+		display: flex;
+		display: -ms-flex;
+		display: -moz-flex;
+		display: -webkit-flex;
+	}
+
+	#choose_person > section > div:first-of-type > section[data-type="avatar"]   div   label  *:not(input[type=radio]),
+	#wizard_new_activity > section > div:first-of-type > section[data-type="activity"]   div   label  *:not(input[type=radio]),
+	#diaper_content > section > div:first-of-type > section[data-type="subactivity_diaper"]   div   label  *:not(input[type=radio]){
+		cursor: pointer;
+		margin-left: 0;
+		padding-left: 0;
+	}
+
+	#choose_person > section > div:first-of-type > section[data-type="avatar"]   div   label input[type=radio],
+	#wizard_new_activity > section > div:first-of-type > section[data-type="activity"]   div   label input[type=radio],
+	#diaper_content > section > div:first-of-type > section[data-type="subactivity_diaper"]   div   label input[type=radio]{
+		cursor: pointer;
+	}
+
+
+	#diaper_content > section > div:first-of-type{
+		margin-left: auto;
+		margin-right: auto;
+		position: absolute;
+		height: 75%;
+	}
