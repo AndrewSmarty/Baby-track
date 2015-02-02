@@ -313,7 +313,11 @@
 							$prevSibling.find("label").html("<input type='radio' name='avatar_radio'/>" + current_baby.nickname);
 							$prevSibling.find("label input[type='radio']").prop("checked", true);
 							
+<<<<<<< HEAD
 
+=======
+							
+>>>>>>> origin/andrew
 							unselectOthers({window:"CHOOSE_EXISTED_PERSON"});
 							$prevSibling.find("div.avatar").toggleClass("selected unselected");
 						}
