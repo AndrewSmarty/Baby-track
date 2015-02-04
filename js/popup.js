@@ -2,8 +2,10 @@
 
 	var bg = chrome.extension.getBackgroundPage();
 	var MAX_PAGE_AMOUNT_COUNT = 8;
-
+	var current_baby;
+	var date;
 	var needToCorrectInputs = false;
+
 
 	function SnugBabyPerson(nickname, birthday, avatarType, color){
 		this.nickname = nickname;
@@ -19,7 +21,27 @@
 			 "', color: '" + this.color.toString() + "'}";
 	};
 
-	var current_baby = new SnugBabyPerson();
+
+
+	function handleFiles(files) {
+	  
+	    var file = files[0];
+	    var imageType = /image.*/;
+	    
+	    if (!file.type.match(imageType) || files.length != 1) {
+	      return;
+	    }
+	    
+	    var img = document.createElement("img");
+	    img.classList.add("obj");
+	    img.file = file;
+	    $("#create_person_block").find("div[data-avatar-type='type3']").append(img); // Assuming that "preview" is a the div output where the content will be displayed.
+	    
+	    var reader = new FileReader();
+	    reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
+	    reader.readAsDataURL(file);
+	}
+
 
 	function IncorrectInputException(message){
 		this.message = message;
@@ -35,7 +57,7 @@
 
 		//setting the default value for the element if it's undefined
 		custom_appear = (typeof custom_appear !== 'undefined') ?  custom_appear: {speed: 400};
-
+		var selector = "";
 		//reset mode to 0;
 		bg.mode = bg.BabyTrackMode.NONE;
 
@@ -72,37 +94,121 @@
 					}
 				});
 
-				switch(custom_appear.effect){
-					case "show":
-							$("#welcome_guide_block").show(custom_appear.speed).promise();
-					break;
-
-
-					case "fadeIn":
-							$("#welcome_guide_block").fadeIn(custom_appear.speed).promise();
-					break;
-
-
-					case "drop":
-							$("#welcome_guide_block").show("drop", custom_appear.speed).promise();
-					break;
-
-					default:
-						$("#welcome_guide_block").css("display", "block");
-				}
+				selector = "#welcome_guide_block";
 
 			break;
 
 
 			case bg.BabyTrackInitialPage.POSTED_RESULTS_TABLE:
+				$("#posted_results_table")
+					.find("table caption")
+					.text( "Today, " +$(".datepicker").val());
+
+				$("#posted_results_table")
+					.find("table tr.table_row_baby_data")
+					.find("td.table_feed_time")
+					.text($(".timepicker").val())
+
+				$("#posted_results_table")
+					.find("table tr.table_row_baby_data")
+					.find("td.table_baby_name")
+					.text(current_baby.nickname);
+
+				$("#posted_results_table")
+					.find("table tr.table_row_baby_data")
+					.find("td.table_baby_name")
+					.text(current_baby.nickname);
+
+				$("#posted_results_table")
+					.find("table tr.table_row_baby_data")
+					.find("td.table_avatar")
+					.html( $("section[data-type='avatar']").find("div.avatar.selected").html());
+
+				selector = "#posted_results_table";
 			
 			break;
 	
 		}
 
+		switch(custom_appear.effect){
+					case "show":
+							$(selector).show(custom_appear.speed).promise();
+					break;
+
+
+					case "fadeIn":
+							$(selector).fadeIn(custom_appear.speed).promise();
+					break;
+
+
+					case "drop":
+							$(selector).show("drop", custom_appear.speed).promise();
+					break;
+
+					default:
+						$(selector).css("display", "block");
+				}
+
 	}
 
+	function foodWindowLogic(){
 
+		try{
+			checkCorrectInputAndSubmit({window: "ADD_FOOD_EVENT"});
+		}catch(e){
+			alert(e.toString());
+			return;
+		}
+		
+		//this part executes as long as the whole data is full
+		//and everything is specified
+
+		bg.mode = bg.BabyTrackMode.ADD_FOOD_EVENT;
+		bg.previousWindow = bg.BabyTrackWindows.ADD_EVENT_WIZARD_NEW_ACTIVITY;
+
+		var $avatar_checked_radio = $("#choose_person input[type='radio']:checked");
+		var nickname = $avatar_checked_radio.parent().text();
+		
+		//setting the default value for the element if it's undefined
+		nickname = (nickname !== '') ?  nickname : "a baby";
+
+		$("#food_content").find("h1").replaceWith("<h1>What and how much did "+ nickname +" eat?</h1>");
+
+		$("#food_content > section > div > section[data-type='subactivity_food']")
+					.click(function(){
+
+						unselectOthers({window: "ADD_FOOD_EVENT"}); 
+						$(this).find("div.subactivity_food").toggleClass("selected unselected");
+						$(this).find("input[type=radio]").prop("checked", true);
+					});
+
+		clearWindows({effect: "drop", speed: 500, direction: "left"});
+		var timer = setInterval(function(){
+			if(bg.windowsAnimationOver){
+				$("#food_content").show("drop", {direction: "right"}, 400);
+				clearInterval(timer);
+			}
+		}, 10);
+
+
+		//Allowing to input only numbers into textboxes
+		$( "#food_content" ).find( "input[name=food_amount], input[name=food_duration]" )
+			.keydown(function (event) {
+		        // Allow: backspace, delete, tab, escape, enter and .
+		        if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+		             // Allow: Ctrl+A
+		            (event.keyCode == 65 && event.ctrlKey === true) || 
+		             // Allow: home, end, left, right, down, up
+		            (event.keyCode >= 35 && event.keyCode <= 40)) {
+		                 // let it happen, don't do anything
+		                 return;
+		        }
+		        // Ensure that it is a number and stop the keypress
+		        if ((event.shiftKey || (event.keyCode < 48 || event.keyCode > 57)) && (event.keyCode < 96 || event.keyCode > 105)) {
+		            event.preventDefault();
+		        }
+		    });
+	}
 
 
 	function diaperWindowLogic(){
@@ -144,6 +250,216 @@
 		}, 10);
 	}
 
+	function createNewPersonWindowLogic(){
+		try{
+			checkCorrectInputAndSubmit({window: "CREATE_NEW_PERSON"});	
+		}
+		catch(e){
+			alert(e.toString());
+			return;
+		}
+
+		//this part executes as long as the whole data is full
+		//and everything is specified
+
+			var nickname = $("#create_person_block  input#person_nickname").val();
+			var birthday = $("#create_person_block  input#person_birthday").val();
+			var avatarType =  $("#create_person_block  .avatar.selected").attr("data-avatar-type");
+			var color = $("#create_person_block  div#palette_field")[0];     			//in processing... not supported yet
+
+			current_baby = new SnugBabyPerson(nickname, birthday, avatarType, color);
+
+			var $prevSibling = $("#choose_person > section > div > .add_person_button").prev();
+			if( $.isEmptyObject($prevSibling[0]) ||
+				!needToCorrectInputs ){
+
+				$prevSibling.find("div > div[data-avatar-type]").toggleClass("selected unselected");
+				$prevSibling.find("label > input[type=radio]").prop("checked", false);
+
+				var newPersonAvatar = 	"<section data-type='avatar'>"+
+											"<div>"+
+												"<div class = 'avatar selected' data-avatar-type="+ current_baby.avatarType +">"+
+												
+												"</div>"+
+												
+												"<label>"+
+													"<input type='radio' name='avatar_radio'/>"+
+													current_baby.nickname +
+												"</label>"+
+											"</div>"+
+										"</section>";
+
+				var pageAvatarCount = $("#choose_person > section > div > section").length;
+
+				if( pageAvatarCount == MAX_PAGE_AMOUNT_COUNT)
+					$("#choose_person > section > div").css({"overflow-y": "scroll"});
+
+				$("#choose_person > section > div > .add_person_button").before( newPersonAvatar );
+
+				if( current_baby.avatarType === "type3")
+					$("#choose_person > section > div > section[data-type='avatar']")
+						.last()
+						.find("div[data-avatar-type='type3']")
+						.html( $("#create_person_block").find("div[data-avatar-type='type3']").html() )
+						.addClass("uploaded");
+
+				$("#choose_person > section > div > section[data-type='avatar']")
+					.last()
+					.click(function(){
+
+						unselectOthers({window: "CHOOSE_EXISTED_PERSON"}); 
+						$(this).find("div.avatar").toggleClass("selected unselected");
+						$(this).find("input[type=radio]").prop("checked", true);
+					})
+					.dblclick(function(event){
+						$(this).hide(500,function(){																	
+							if( !$.isEmptyObject( $(this).prev()[0] )){														//if previous exists
+								if( $(this).find("label > input[type=radio]").is(":checked")){
+									$(this).prev().find("div > div[data-avatar-type]").toggleClass("selected unselected");
+									$(this).prev().find("label > input[type=radio]").prop("checked", true);
+								}
+							}else{
+								if( $(this).find("label > input[type=radio]").is(":checked")){
+									var $nextSibling = $("#choose_person > section > div > .add_person_button").prev();
+									if( !$.isEmptyObject( $(this).next()[0]) ){
+										$(this).next().find("div > div[data-avatar-type]").toggleClass("selected unselected");
+										$(this).next().find("label > input[type=radio]").prop("checked", true);
+									}
+								}
+							}
+							$(this).remove();
+						});
+					})
+					.find("label > input[type=radio]")
+					.prop("checked", true);
+
+			}else{
+				needToCorrectInputs = false;
+				$prevSibling.find("div[data-avatar-type]").attr("data-avatar-type", current_baby.avatarType);
+				$prevSibling.find("label").html("<input type='radio' name='avatar_radio'/>" + current_baby.nickname);
+				$prevSibling.find("label input[type='radio']").prop("checked", true);
+				
+				unselectOthers({window:"CHOOSE_EXISTED_PERSON"});
+				$prevSibling.find("div.avatar").toggleClass("selected unselected");
+			}
+
+			clearWindows({effect: "drop", speed: 500, direction: "left"});
+
+			var timer = setInterval(function(){
+				if(bg.windowsAnimationOver){
+					$("#choose_person").show("drop", {direction: "right"}, 400);
+					clearInterval(timer);
+				}
+			}, 10);
+
+			bg.mode = bg.BabyTrackMode.CHOOSE_EXISTED_PERSON;
+			bg.previousWindow = bg.BabyTrackWindows.CREATE_NEW_PERSON;
+		//////
+
+	}
+
+
+	function chooseExistedPersonWindowLogic(){
+			try{
+				checkCorrectInputAndSubmit({window: "ADD_EVENT_WIZARD_NEW_ACTIVITY"});
+			}catch(e){
+				alert(e.toString());
+				return;
+			}
+
+			//this part executes as long as the whole data is full
+			//and everything is specified
+
+			bg.mode = bg.BabyTrackMode.ADD_EVENT_WIZARD_NEW_ACTIVITY;
+			bg.previousWindow = bg.BabyTrackWindows.CHOOSE_EXISTED_PERSON;
+
+			var $avatar_checked_radio = $("#choose_person input[type='radio']:checked");
+			var nickname = $avatar_checked_radio.parent().text();
+
+			//setting the default value for the element if it's undefined
+			nickname = (nickname !== '') ?  nickname : "a baby";
+
+			$("#wizard_new_activity").find("h1").replaceWith("<h1>Choose an activity for "+ nickname +"</h1>");
+
+			$("#wizard_new_activity > section > div > section[data-type='activity']")
+						.click(function(){
+
+							unselectOthers({window: "ADD_EVENT_WIZARD_NEW_ACTIVITY"}); 
+							$(this).find("div.activity").toggleClass("selected unselected");
+							$(this).find("input[type=radio]").prop("checked", true);
+						});
+
+			clearWindows({effect: "drop", speed: 500, direction: "left"});
+			var timer = setInterval(function(){
+				if(bg.windowsAnimationOver){
+					$("#wizard_new_activity").show("drop", {direction: "right"}, 400);
+					clearInterval(timer);
+				}
+			}, 10);
+	}
+
+
+
+	function addEventWizardNewActivityWindowLogic(){
+
+			var $checked_activity = $("#wizard_new_activity   input[type='radio']:checked");
+			var $data_diaper_type = $checked_activity.parent().prev().attr("data-activity-type");
+			
+			date = new SnugBabyDayTime();
+
+			$("#diaper_content, #food_content")
+				.find("input.datepicker")
+				.val(date.shortMonth + ", " + date.year);
+
+			$("#diaper_content, #food_content")
+				.find("input.timepicker")
+				.val(date.time);
+
+			switch($data_diaper_type){
+				case "food":
+					foodWindowLogic();
+					break;
+
+				case "diaper":
+					diaperWindowLogic();
+					break;
+
+				case "weight":
+					break;
+			}
+	}
+
+
+	function postedResultsWindowLogic(){
+				$("#add_event_button").show(1000);
+
+					//get rid of buttons NEXT and BACK
+					$("#bt_body > div").last().hide(600);
+
+					bg.initialPage = bg.BabyTrackInitialPage.POSTED_RESULTS_TABLE;
+					bg.previousWindow = bg.BabyTrackWindows.NONE;
+					bg.mode = bg.BabyTrackMode.NONE;
+
+					clearWindows({effect: "fadeOut", speed: 800});	//asynchronous function
+
+					//awaiting until other animation processes stop
+					//as clearWindows function is asynchronous
+
+					var timer = setInterval(function(){
+						if(bg.windowsAnimationOver){
+							setInitialPage(bg.initialPage, {effect: "drop", speed: 500});
+							clearInterval(timer);
+							
+							//clear all the fields in Create New Person Window
+							$("#create_person_block  input#person_nickname").val("");
+							$("#create_person_block  input#person_birthday").val("");
+							$("#create_person_block  .avatar.selected").toggleClass("selected unselected");
+							$("#create_person_block  div[data-avatar-type='type3']").toggleClass("uploaded unuploaded").empty();
+							var color = $("#create_person_block  div#palette_field")[0];     				//in processing... not supported yet
+						}
+					}, 10);
+
+	}
 
 
 	function checkCorrectInputAndSubmit( object ){
@@ -159,7 +475,7 @@
 					throw new IncorrectInputException( "Nickname is not specified!" );
 				else if( birthday === "")
 					throw new IncorrectInputException( "Birthday is not specified!" );
-				else if( $.isEmptyObject( $avatar[0] ))
+				else if( $.isEmptyObject( $avatar[0] ) )
 					throw new IncorrectInputException( "Avatar is not specified!" );
 				break;
 
@@ -230,166 +546,24 @@
 			switch(bg.mode)	{
 				
 				case bg.BabyTrackMode.CREATE_NEW_PERSON:
-
-					try{
-						checkCorrectInputAndSubmit({window: "CREATE_NEW_PERSON"});	
-					}
-					catch(e){
-						alert(e.toString());
-						break;
-					}
-
-					//this part executes as long as the whole data is full
-					//and everything is specified
-						  
- 
-						var nickname = $("#create_person_block  input#person_nickname").val();
-						var birthday = $("#create_person_block  input#person_birthday").val();
-						var avatarType =  $("#create_person_block  .avatar.selected").attr("data-avatar-type");
-						var color = $("#create_person_block  div#palette_field")[0];     			//in processing... not supported yet
-
-						current_baby = new SnugBabyPerson(nickname, birthday, avatarType, color);
-
-						var $prevSibling = $("#choose_person > section > div > .add_person_button").prev();
-						if( $.isEmptyObject($prevSibling[0]) ||
-							!needToCorrectInputs ){
-
-							$prevSibling.find("div > div[data-avatar-type]").toggleClass("selected unselected");
-							$prevSibling.find("label > input[type=radio]").prop("checked", false);
-
-							var newPersonAvatar = 	"<section data-type='avatar'>"+
-														"<div>"+
-															"<div class = 'avatar selected' data-avatar-type="+ current_baby.avatarType +">"+
-															
-															"</div>"+
-															
-															"<label>"+
-																"<input type='radio' name='avatar_radio'/>"+
-																current_baby.nickname +
-															"</label>"+
-														"</div>"+
-													"</section>";
-
-							var pageAvatarCount = $("#choose_person > section > div > section").length;
-
-							if( pageAvatarCount == MAX_PAGE_AMOUNT_COUNT)
-								$("#choose_person > section > div").css({"overflow-y": "scroll"});
-
-							$("#choose_person > section > div > .add_person_button").before( newPersonAvatar );
-
-							$("#choose_person > section > div > section[data-type='avatar']")
-								.last()
-								.click(function(){
-
-									unselectOthers({window: "CHOOSE_EXISTED_PERSON"}); 
-									$(this).find("div.avatar").toggleClass("selected unselected");
-									$(this).find("input[type=radio]").prop("checked", true);
-								})
-								.dblclick(function(event){
-									$(this).hide(500,function(){																	
-										if( !$.isEmptyObject( $(this).prev()[0] )){														//if previous exists
-											if( $(this).find("label > input[type=radio]").is(":checked")){
-												$(this).prev().find("div > div[data-avatar-type]").toggleClass("selected unselected");
-												$(this).prev().find("label > input[type=radio]").prop("checked", true);
-											}
-										}else{
-											if( $(this).find("label > input[type=radio]").is(":checked")){
-												var $nextSibling = $("#choose_person > section > div > .add_person_button").prev();
-												if( !$.isEmptyObject( $(this).next()[0]) ){
-													$(this).next().find("div > div[data-avatar-type]").toggleClass("selected unselected");
-													$(this).next().find("label > input[type=radio]").prop("checked", true);
-												}
-											}
-										}
-										$(this).remove();
-									});
-								})
-								.find("label > input[type=radio]")
-								.prop("checked", true);
-
-						}else{
-							needToCorrectInputs = false;
-							$prevSibling.find("div[data-avatar-type]").attr("data-avatar-type", current_baby.avatarType);
-							$prevSibling.find("label").html("<input type='radio' name='avatar_radio'/>" + current_baby.nickname);
-							$prevSibling.find("label input[type='radio']").prop("checked", true);
-							
-							unselectOthers({window:"CHOOSE_EXISTED_PERSON"});
-							$prevSibling.find("div.avatar").toggleClass("selected unselected");
-						}
-
-						clearWindows({effect: "drop", speed: 500, direction: "left"});
-
-						var timer = setInterval(function(){
-							if(bg.windowsAnimationOver){
-								$("#choose_person").show("drop", {direction: "right"}, 400);
-								clearInterval(timer);
-							}
-						}, 10);
-
-						bg.mode = bg.BabyTrackMode.CHOOSE_EXISTED_PERSON;
-						bg.previousWindow = bg.BabyTrackWindows.CREATE_NEW_PERSON;
-					//////
-
-				break;
+					createNewPersonWindowLogic();
+					break;
 
 				case bg.BabyTrackMode.CHOOSE_EXISTED_PERSON:
-
-					try{
-						checkCorrectInputAndSubmit({window: "ADD_EVENT_WIZARD_NEW_ACTIVITY"});
-					}catch(e){
-						alert(e.toString());
-						break;
-					}
-					
-					//this part executes as long as the whole data is full
-					//and everything is specified
-
-					bg.mode = bg.BabyTrackMode.ADD_EVENT_WIZARD_NEW_ACTIVITY;
-					bg.previousWindow = bg.BabyTrackWindows.CHOOSE_EXISTED_PERSON;
-
-					var $avatar_checked_radio = $("#choose_person input[type='radio']:checked");
-					var nickname = $avatar_checked_radio.parent().text();
-					
-					//setting the default value for the element if it's undefined
-					nickname = (nickname !== '') ?  nickname : "a baby";
-
-					$("#wizard_new_activity").find("h1").replaceWith("<h1>Choose an activity for "+ nickname +"</h1>");
-
-					$("#wizard_new_activity > section > div > section[data-type='activity']")
-								.click(function(){
-
-									unselectOthers({window: "ADD_EVENT_WIZARD_NEW_ACTIVITY"}); 
-									$(this).find("div.activity").toggleClass("selected unselected");
-									$(this).find("input[type=radio]").prop("checked", true);
-								});
-
-					clearWindows({effect: "drop", speed: 500, direction: "left"});
-					var timer = setInterval(function(){
-						if(bg.windowsAnimationOver){
-							$("#wizard_new_activity").show("drop", {direction: "right"}, 400);
-							clearInterval(timer);
-						}
-					}, 10);
-
-				break;
+					chooseExistedPersonWindowLogic();
+					break;
 
 				case bg.BabyTrackMode.ADD_EVENT_WIZARD_NEW_ACTIVITY:
+					addEventWizardNewActivityWindowLogic();
+					break;
 
-					var $checked_activity = $("#wizard_new_activity   input[type='radio']:checked");
-					
-					var $data_diaper_type = $checked_activity.parent().prev().attr("data-activity-type")
-					
-					switch($data_diaper_type){
-						case "food":
-							break;
-						case "diaper":
-							diaperWindowLogic();
-							break;
-						case "weight":
-							break;
-					}
+				case bg.BabyTrackMode.ADD_FOOD_EVENT:
+					postedResultsWindowLogic();
+					break;
 
-				break;
+				case bg.BabyTrackMode.ADD_DIAPER_EVENT:
+					postedResultsWindowLogic();
+					break;
 			}
 		});
 
@@ -398,10 +572,9 @@
 			switch(bg.previousWindow){
 
 				case bg.BabyTrackWindows.NONE:
-				break;
+					break;
 
 				case bg.BabyTrackWindows.WELCOME_POST:
-
 					$("#add_event_button").show(1000);
 
 					//get rid of buttons NEXT and BACK
@@ -420,10 +593,19 @@
 						if(bg.windowsAnimationOver){
 							setInitialPage(bg.initialPage, {effect: "drop", speed: 500});
 							clearInterval(timer);
+							//clear all the fields in Create New Person Window
+							$("#create_person_block  input#person_nickname").val("");
+							$("#create_person_block  input#person_birthday").val("");
+							$("#create_person_block  .avatar.selected").toggleClass("selected unselected");
+							$("#create_person_block  div[data-avatar-type='type3']")
+								.toggleClass("uploaded unuploaded")
+								.empty();
+							var color = $("#create_person_block  div#palette_field")[0];     				//in processing... not supported yet
 						}
 					}, 10);
 
-				break;
+
+					break;
 
 				case bg.BabyTrackWindows.POSTED_RESULTS_TABLE:
 					//get rid of buttons NEXT and BACK
@@ -466,11 +648,23 @@
 					break;
 				
 				case bg.BabyTrackWindows.ADD_EVENT_WIZARD_NEW_ACTIVITY:
+
+					bg.mode = bg.BabyTrackMode.ADD_EVENT_WIZARD_NEW_ACTIVITY;
+					bg.previousWindow = bg.BabyTrackWindows.CHOOSE_EXISTED_PERSON;
+
+					clearWindows({effect: "drop", speed: 500, direction: "right"});
+					var timer = setInterval(function(){
+						if(bg.windowsAnimationOver){
+							$("#wizard_new_activity").show("drop", {direction: "left"}, 400);
+							clearInterval(timer);
+						}
+					}, 10);
 					break;
 
 			}
 		});
 	}
+
 
 	/******************************************************************/
 
@@ -500,10 +694,12 @@
 
 	$(function(){
 
+		current_baby = new SnugBabyPerson();
+
 		setInitialPage(bg.initialPage);
 		setNextBackButtonsLogic();
 
-
+		//establishing default values for radio boxes
 		$("#wizard_new_activity    section[data-type='activity']:first-child   input[type=radio]").prop("checked", true);
 		$("#diaper_content    section[data-type='subactivity_diaper']:first-child   input[type=radio]").prop("checked", true);
 
@@ -534,12 +730,35 @@
 				}
 
 			});
-
 		});
+
+
+		$("#create_person_block")
+          .find("div[data-avatar-type='type3']")
+          .click(function (e) {
+             $(this)
+             	.next()					
+                .click();
+              e.preventDefault(); // prevent navigation to "#"
+          });
+
+        $("#create_person_block")
+        	.find("input[type=file]")
+          	.change(function (){
+          		if( $(this).prev().hasClass("unuploaded") )
+          			$(this).prev().toggleClass("uploaded unuploaded");
+          		else
+          			$(this).prev().empty();
+          		handleFiles(this.files);
+          	});
 
 		$("#bt_search_engine_area > span").last().click(function(){
-			$("#bt_search_engine input[name='search_field']").val("");
+				$(this)
+					.next()
+					.find("input[name=search_field]")
+					.val("");
 		});
+
 
 		$("#add_event_button").click(function(){
 
@@ -567,7 +786,7 @@
 			}
 		});
 
-		$("#choose_person  .add_person_button").click(function(){
+		$("#choose_person").find(".add_person_button").click(function(){
 
 					addPersonButtonPressed = true;
 
@@ -586,6 +805,9 @@
 					$("#create_person_block  input#person_nickname").val("");
 					$("#create_person_block  input#person_birthday").val("");
 					$("#create_person_block  .avatar.selected").toggleClass("selected unselected");
+					$("#create_person_block  div[data-avatar-type='type3']")
+						.toggleClass("uploaded unuploaded")
+						.empty();
 					var color = $("#create_person_block  div#palette_field")[0];     				//in processing... not supported yet
 
 		});

@@ -40,7 +40,6 @@
 		background-position: -65px 0;
 	}
 
-
 	div[data-activity-type = "food"],
 	div[data-activity-type = "diaper"],
 	div[data-activity-type = "weight"]{
@@ -189,6 +188,7 @@
 	}
 
 	/***************************************************************/
+
 
 	#bt_header{
 		background-color: #00C8F8;
@@ -414,7 +414,7 @@
 	#create_person_block > section > div:first-of-type label[for="person_nickname"] + input,
 	#create_person_block > section > div:first-of-type label[for="person_birthday"] + input{
 		margin: 0px 10px 10px 0px;
-		padding-left: 5px;
+		padding: 3px 0px 3px 5px;
 	}
 
 	#create_person_block > section > div:first-of-type label[for="person_birthday"] + input{
@@ -423,16 +423,14 @@
 
 	#create_person_block > section > div:nth-of-type(2){
 		position: relative;
-		width: 40%;
-		left: 27%;
-		margin-bottom: 1em;
-		margin-top: 20%;
+	}
+
+	#create_person_block > section > div:nth-of-type(2) > div#avatar_select_desc + div{
+		float: left;
 	}
 
 	#create_person_block > section > div:nth-of-type(2) div.avatar{
 		cursor: pointer;
-		position: absolute;
-		top: -70px;
 	}
 
 	.avatar.selected, 
@@ -453,20 +451,78 @@
 		opacity: 1;
 	}
 
-	#create_person_block > section > div:nth-of-type(2) div[data-avatar-type="type1"]{
-		margin-left: 20px;
+
+	#create_person_block > section hr{
+		width: 90%;
+		position: relative;
+		left: -10px;
 	}
 
-	#create_person_block > section > div:nth-of-type(2) div[data-avatar-type="type2"] {
-		margin-left: 115px;
+	#create_person_block > section > div:nth-of-type(2) + hr{
+		top: 10px;
+	}
+
+	#create_person_block 	div div[data-avatar-type = "type1"]{
+		float: left;
+		margin-right: 20px; 
+	}
+
+	#create_person_block	div div[data-avatar-type = "type2"] {
+		float: left;
+		margin-right: 20px; 
+	}
+
+	div[data-avatar-type = "type3"].unuploaded,
+	div[data-avatar-type = "type3"].uploaded{
+		border-radius: 6px;
+		width: 65px;
+		height: 65px;
+	}
+
+	div[data-avatar-type = "type3"].uploaded > img{
+		background-color: #FFFFFF;
+		border-radius: 6px;
+		width: 65px;
+		height: 65px;
+	}
+
+	#create_person_block 	div[data-avatar-type = "type3"].unuploaded{
+		float: right;
+		background-color: #EFEFEF;
+		border: thin solid #686868;
+	}
+
+	#create_person_block 	div[data-avatar-type = "type3"].uploaded{
+		float: right;
+		border: 0;
+	}
+
+
+	#create_person_block  	div[data-avatar-type = "type3"].unuploaded:before{
+		content: "Drop or click to browse";
+		font-size: 13px;
+		border-radius: 6px;
+		text-align: center;
+		position: absolute;
+		margin: 5px 5px;
+		width: 54px;
+		height: 54px;
+		color: #686868;
+		border: thin dashed #686868;
+	}
+
+	#create_person_block   input[type=file]{
+		display: none;
 	}
 
 	#create_person_block > section > div:nth-of-type(2)  input#male_gender{
 		margin-left: 55px;
+		padding: 3px 0px 3px 3px;
 	}
 
 	#create_person_block > section > div:nth-of-type(2)  input#female_gender{
 		margin-left: 12px;
+		padding: 3px 0px 3px 3px;
 	}
 
 	#create_person_block > section > div:nth-of-type(2)  input + label[for="female_gender"] ,
@@ -479,11 +535,6 @@
 		font-size: 16px;
 	}
 
-	#create_person_block > section hr{
-		width: 90%;
-		position: relative;
-		left: -10px;
-	}
 
 	#create_person_block > section > div:nth-of-type(3) #palette_field {
 		margin-bottom: 20%;
@@ -492,7 +543,8 @@
 
 	#choose_person,
 	#wizard_new_activity,
-	#diaper_content{
+	#diaper_content,
+	#food_content{
 		position: relative;
 		border: thin solid #969696;
 		display: none;
@@ -506,7 +558,8 @@
 
 	#choose_person > section > h1,
 	#wizard_new_activity > section > h1,
-	#diaper_content > section > h1{
+	#diaper_content > section > h1,
+	#food_content > section > h1{
 		font-family: Optima, Segoe, Segoe UI, Candara, Calibri, Arial, sans-serif; 
 		color: #00C8F8;
 		font-size: 20px;
@@ -527,34 +580,41 @@
 
 	#avatar_select_desc{
 		font-size: 17px;
-		position: absolute;
-		top: -3em;
-		left: -6em;
+		float:left;
+		margin: 20px 10px;
 		color: #000000;
 		text-shadow: 0px 1px 3px #D3D3D3;
 	}
 
 	#choose_person > section,
 	#wizard_new_activity > section,
-	#diaper_content > section{
+	#diaper_content > section,
+	#food_content > section{
 		position: absolute;
 		height: 90%;
 		width: 90%;
 	}
 
 	#choose_person > section > div:first-of-type,
-	#wizard_new_activity > section > div:first-of-type{
+	#wizard_new_activity > section > div:first-of-type,
+	#food_content > section > div:first-of-type{
 		position: absolute;
 		height: 75%;
 	}
 
+	/*#food_content > section > div:first-of-type{
+		left: 25%;
+	}*/
+
 	#choose_person > section > div:first-of-type > div.add_person_button,
-	#wizard_new_activity > section > div:first-of-type > div.add_person_button{
+	#wizard_new_activity > section > div:first-of-type > div.add_person_button,
+	#food_content > section > div:first-of-type > div.add_person_button{
 		float:left;
 	}
 
 	#choose_person > section > div:first-of-type > div.add_person_button  div,
-	#wizard_new_activity > section > div:first-of-type > div.add_person_button  div{
+	#wizard_new_activity > section > div:first-of-type > div.add_person_button  div,
+	#food_content > section > div:first-of-type > div.add_person_button  div{
 		cursor: pointer;
 		position: relative;
 		top:15px;
@@ -562,7 +622,8 @@
 	}
 
 	#choose_person > section > div:first-of-type > div.add_person_button  div div,
-	#wizard_new_activity > section > div:first-of-type > div.add_person_button  div div{
+	#wizard_new_activity > section > div:first-of-type > div.add_person_button  div div,
+	#food_content > section > div:first-of-type > div.add_person_button  div div{
 		cursor: pointer;
 		background: url("images/add_action_buttons.png") no-repeat -39px 0px;
 		width: 41px;
@@ -571,7 +632,8 @@
 
 	#choose_person > section > div:first-of-type > section[data-type="avatar"],
 	#wizard_new_activity > section > div:first-of-type > section[data-type="activity"],
-	#diaper_content > section > div:first-of-type > section[data-type="subactivity_diaper"]{
+	#diaper_content > section > div:first-of-type > section[data-type="subactivity_diaper"],
+	#food_content > section > div:first-of-type > section[data-type="subactivity_food"]{
 		margin: 10px;
 		cursor: pointer;
 		float:left;
@@ -579,13 +641,15 @@
 
 	#choose_person > section > div:first-of-type > section[data-type="avatar"]   div,
 	#wizard_new_activity > section > div:first-of-type > section[data-type="activity"]   div,
-	#diaper_content > section > div:first-of-type > section[data-type="subactivity_diaper"]   div{
+	#diaper_content > section > div:first-of-type > section[data-type="subactivity_diaper"]   div,
+	#food_content > section > div:first-of-type > section[data-type="subactivity_food"]   div{
 		position: relative;
 	}
 
 	#choose_person > section > div:first-of-type > section[data-type="avatar"]   div   label,
 	#wizard_new_activity > section > div:first-of-type > section[data-type="activity"]   div   label,
-	#diaper_content > section > div:first-of-type > section[data-type="subactivity_diaper"]   div   label{
+	#diaper_content > section > div:first-of-type > section[data-type="subactivity_diaper"]   div   label,
+	#food_content > section > div:first-of-type > section[data-type="subactivity_food"]   div   label{
 		cursor: pointer;
 		display: flex;
 		display: -ms-flex;
@@ -595,7 +659,8 @@
 
 	#choose_person > section > div:first-of-type > section[data-type="avatar"]   div   label  *:not(input[type=radio]),
 	#wizard_new_activity > section > div:first-of-type > section[data-type="activity"]   div   label  *:not(input[type=radio]),
-	#diaper_content > section > div:first-of-type > section[data-type="subactivity_diaper"]   div   label  *:not(input[type=radio]){
+	#diaper_content > section > div:first-of-type > section[data-type="subactivity_diaper"]   div   label  *:not(input[type=radio]),
+	#food_content > section > div:first-of-type > section[data-type="subactivity_food"]   div   label  *:not(input[type=radio]){
 		cursor: pointer;
 		margin-left: 0;
 		padding-left: 0;
@@ -603,14 +668,116 @@
 
 	#choose_person > section > div:first-of-type > section[data-type="avatar"]   div   label input[type=radio],
 	#wizard_new_activity > section > div:first-of-type > section[data-type="activity"]   div   label input[type=radio],
-	#diaper_content > section > div:first-of-type > section[data-type="subactivity_diaper"]   div   label input[type=radio]{
+	#diaper_content > section > div:first-of-type > section[data-type="subactivity_diaper"]   div   label input[type=radio],
+	#food_content > section > div:first-of-type > section[data-type="subactivity_food"]   div   label input[type=radio]{
 		cursor: pointer;
 	}
 
 
 	#diaper_content > section > div:first-of-type{
-		margin-left: auto;
-		margin-right: auto;
 		position: absolute;
-		height: 75%;
+		-webkit-transition: all 0.30s ease-in-out;
+		-moz-transition: all 0.30s ease-in-out;
+		-ms-transition: all 0.30s ease-in-out;
+		-o-transition: all 0.30s ease-in-out;
+		/*left: 25%;*/
+	}
+
+
+	#diaper_content > section {
+		position: relative;
+	}
+
+
+	#food_content > section > div label{
+		font-size: 17px;
+		margin: 0px 10px 10px 0px;
+		color: #000000;
+		text-shadow: 0px 1px 3px #D3D3D3;
+	}
+
+	#food_content > section > div label input{
+		margin: 10px 10px;
+		padding-left: 5px;
+		width: 15%;
+	}
+
+	#food_content   input.datepicker,
+	#food_content   input.timepicker,
+	#diaper_content   input.datepicker,
+	#diaper_content   input.timepicker{
+		border: 0;
+		width : 30%;
+		color: #000000;
+		font-size: 17px;
+		padding: 2px 5px;
+		text-shadow: 0px 1px 3px #D3D3D3;
+	}
+
+	/***************    input[type=text] styling    **************/
+	#create_person_block 	label[for="person_nickname"] + input,
+	#create_person_block 	label[for="person_birthday"] + input,
+	#create_person_block 	input#male_gender,
+	#create_person_block 	input#female_gender,
+	#food_content			input[name="food_amount"],
+	#food_content			input[name="food_duration"]{
+		border:2px solid #dadada;
+		border-radius:5px;
+		-webkit-transition: all 0.30s ease-in-out;
+		-moz-transition: all 0.30s ease-in-out;
+		-ms-transition: all 0.30s ease-in-out;
+		-o-transition: all 0.30s ease-in-out;
+	}
+
+	#create_person_block 	label[for="person_nickname"] + input:focus,
+	#create_person_block 	label[for="person_birthday"] + input:focus,
+	#create_person_block 	input#male_gender:focus,
+	#create_person_block 	input#female_gender:focus,
+	#food_content			input[name="food_amount"]:focus,
+	#food_content			input[name="food_duration"]:focus{
+		outline:none;
+		border-color:#9ecaed;
+		box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+		border: 2px solid rgba(81, 203, 238, 1);
+	}
+	/*************************************************************/
+
+
+	#posted_results_table{
+		position: relative;
+		display: none;
+		cursor: default;
+		border-radius: 3px;
+		padding:10px 5px;
+		width: 100%;
+		left:-5px;
+		top:8%;
+	}
+
+	table {
+		width: 100%;
+		text-align: center;
+		font-size: 15px;
+	    border-collapse: collapse;
+	    border:2px solid #dadada;
+		border-radius:5px;
+
+	}
+	table caption{
+		text-align: left;
+		margin-bottom: 5px;
+	}
+	tr.table_row_baby_data{
+		background: #FFF;
+	}
+
+	td.table_avatar{
+		padding:0;
+	}
+
+	td.table_baby_name,
+	td.table_baby_activity,
+	td.table_feed_time,
+	td.table_notes{
+		padding: 5px 0px 5px 5px;
 	}
